@@ -1,6 +1,7 @@
 import axios from "axios";
 import express from "express";
 import xlsx from "xlsx";
+import regions from "./src/regions.js";
 
 const app = express();
 const port = 3000;
@@ -9,7 +10,8 @@ const url =
 
 const respondWithJson = (res) => ({ data, status, statusText }) => {
   console.log(status, statusText, data.length, "bytes");
-  res.send(xlsx.read(data)?.Sheets?.["Antal per dag region"]);
+  let sheet = xlsx.read(data)?.Sheets?.["Antal per dag region"];
+  res.send(regions(sheet));
 };
 
 const respondWithXlsx = (res) => ({ data }) => {
