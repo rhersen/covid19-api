@@ -9,7 +9,7 @@ const url =
 
 const respondWithJson = (res) => ({ data, status, statusText }) => {
   console.log(status, statusText, data.length, "bytes");
-  res.send(xlsx.read(data));
+  res.send(xlsx.read(data)?.Sheets?.["Antal per dag region"]);
 };
 
 const respondWithXlsx = (res) => ({ data }) => {
