@@ -1,0 +1,23 @@
+{
+  "name": "covid19-api",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rhersen/covid19-api.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rhersen/covid19-api/issues"
+  },
+  "homepage": "https://github.com/rhersen/covid19-api#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
