@@ -7,14 +7,14 @@ app.get('/', (req, res) => {
   axios.get('https://www.arcgis.com/sharing/rest/content/items/b5e7488e117749c19881cce45db13f7e/data', {
     responseType: 'arraybuffer',
   })
-    .then(function(response) {
-      console.log('handle success', response.status, response.statusText, response.data.length, 'bytes')
+    .then(function({data, status, statusText}) {
+      console.log('handle success', status, statusText, data.length, 'bytes')
       res.writeHead(200, {
         'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         'Content-disposition': 'attachment;filename=Folkhalsomyndigheten_Covid19.xlsx',
-        'Content-Length': response.data.length
+        'Content-Length': data.length
       });
-      res.end(Buffer.from(response.data, 'binary'));
+      res.end(Buffer.from(data, 'binary'));
     })
     .catch(function(error) {
       console.log('handle error')
