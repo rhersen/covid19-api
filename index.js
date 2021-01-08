@@ -8,10 +8,10 @@ const port = 3000;
 const url =
   "https://www.arcgis.com/sharing/rest/content/items/b5e7488e117749c19881cce45db13f7e/data";
 
-const respondWithJson = (res) => ({ data, status, statusText }) => {
+const respondWithSheet = (res) => ({ data, status, statusText }) => {
   console.log(status, statusText, data.length, "bytes");
   let sheet = xlsx.read(data)?.Sheets?.["Antal per dag region"];
-  res.send(regions(sheet));
+  res.send(sheet);
 };
 
 const respondWithRegions = (res) => ({ data, status, statusText }) => {
@@ -46,7 +46,7 @@ app.get("/xlsx", (req, res) => {
 app.get("/json", (req, res) => {
   axios
     .get(url, { responseType: "arraybuffer" })
-    .then(respondWithJson(res))
+    .then(respondWithSheet(res))
     .catch(handleError(res));
 });
 
