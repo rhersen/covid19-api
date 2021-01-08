@@ -14,6 +14,12 @@ const respondWithJson = (res) => ({ data, status, statusText }) => {
   res.send(regions(sheet));
 };
 
+const respondWithRegions = (res) => ({ data, status, statusText }) => {
+  console.log(status, statusText, data.length, "bytes");
+  let sheet = xlsx.read(data)?.Sheets?.["Antal per dag region"];
+  res.send(regions(sheet));
+};
+
 const respondWithXlsx = (res) => ({ data }) => {
   res.writeHead(200, {
     "Content-Type":
@@ -41,6 +47,13 @@ app.get("/json", (req, res) => {
   axios
     .get(url, { responseType: "arraybuffer" })
     .then(respondWithJson(res))
+    .catch(handleError(res));
+});
+
+app.get("/cases", (req, res) => {
+  axios
+    .get(url, { responseType: "arraybuffer" })
+    .then(respondWithRegions(res))
     .catch(handleError(res));
 });
 
