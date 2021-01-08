@@ -33,7 +33,7 @@ describe("regions", function () {
           w: "1",
         },
       })
-    ).toEqual({ Totalt_antal_fall: { "2/4/20": 1 } });
+    ).toEqual({ Totalt_antal_fall: { "2020-02-04": 1 } });
   });
 
   it("handles 3 by 3", function () {
@@ -94,12 +94,12 @@ describe("regions", function () {
       })
     ).toEqual({
       Totalt_antal_fall: {
-        "2/4/20": 1,
-        "2/5/20": 0,
+        "2020-02-04": 1,
+        "2020-02-05": 0,
       },
       Blekinge: {
-        "2/4/20": 0,
-        "2/5/20": 0,
+        "2020-02-04": 0,
+        "2020-02-05": 0,
       },
     });
   });

@@ -1,3 +1,5 @@
+import { format, parse } from "date-fns";
+
 export default (sheet) => {
   let entries = Object.entries(sheet);
 
@@ -23,7 +25,12 @@ export default (sheet) => {
     .filter(([cell]) => !/\D1$/.test(cell))
     .forEach(([cell, value]) => {
       let match = /^(\D+)(\d+)$/.exec(cell);
-      if (match) columns[columnKeys[match[1]]][rowKeys[match[2]]] = value.v;
+      if (match)
+        columns[columnKeys[match[1]]][iso(rowKeys[match[2]])] = value.v;
     });
   return columns;
 };
+
+function iso(date) {
+  return format(parse(date, "M/d/yy", new Date()), "yyyy-MM-dd");
+}

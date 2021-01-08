@@ -19,6 +19,7 @@
   "homepage": "https://github.com/rhersen/covid19-api#readme",
   "dependencies": {
     "axios": "^0.21.1",
+    "date-fns": "^2.16.1",
     "express": "^4.17.1",
     "xlsx": "^0.16.9"
   },
