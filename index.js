@@ -7,6 +7,7 @@ const app = express();
 const port = 3000;
 const url =
   "https://www.arcgis.com/sharing/rest/content/items/b5e7488e117749c19881cce45db13f7e/data";
+const cache = {};
 
 const respondWithSheet = (res) => ({ data, status, statusText }) => {
   console.log(status, statusText, data.length, "bytes");
@@ -17,7 +18,9 @@ const respondWithSheet = (res) => ({ data, status, statusText }) => {
 const respondWithRegions = (res) => ({ data, status, statusText }) => {
   console.log(status, statusText, data.length, "bytes");
   let sheet = xlsx.read(data)?.Sheets?.["Antal per dag region"];
-  res.send(regions(sheet));
+  let fetched = regions(sheet);
+  cache.regions = fetched;
+  res.send(fetched);
 };
 
 const respondWithXlsx = (res) => ({ data }) => {
@@ -51,10 +54,15 @@ app.get("/json", (req, res) => {
 });
 
 app.get("/cases", (req, res) => {
-  axios
-    .get(url, { responseType: "arraybuffer" })
-    .then(respondWithRegions(res))
-    .catch(handleError(res));
+  if (cache.regions) {
+    console.log("regions cached");
+    res.send(cache.regions);
+  } else {
+    axios
+      .get(url, { responseType: "arraybuffer" })
+      .then(respondWithRegions(res))
+      .catch(handleError(res));
+  }
 });
 
 app.listen(port, () => {
