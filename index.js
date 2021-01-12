@@ -23,7 +23,7 @@ const respondWithRegions = (res) => ({ data, status, statusText }) => {
   let sheet = Sheets?.["Antal per dag region"];
   let fetched = regions(sheet);
   cache.regions = fetched;
-  cache.expires = addHours(fileReleased, 92);
+  cache.expires = addHours(fileReleased, 95);
   res.send(fetched);
 };
 
