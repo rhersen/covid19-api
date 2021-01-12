@@ -2,6 +2,7 @@ import axios from "axios";
 import express from "express";
 import xlsx from "xlsx";
 import regions from "./src/regions.js";
+import {addHours, isPast, parse} from "date-fns";
 
 const app = express();
 const port = 3000;
@@ -11,15 +12,18 @@ const cache = {};
 
 const respondWithSheet = (res) => ({ data, status, statusText }) => {
   console.log(status, statusText, data.length, "bytes");
-  let sheet = xlsx.read(data)?.Sheets?.["Antal per dag region"];
-  res.send(sheet);
+  res.send(xlsx.read(data));
 };
 
 const respondWithRegions = (res) => ({ data, status, statusText }) => {
   console.log(status, statusText, data.length, "bytes");
-  let sheet = xlsx.read(data)?.Sheets?.["Antal per dag region"];
+  const { SheetNames, Sheets } = xlsx.read(data);
+  let [, date] = /\w*\s*(.+)/.exec(SheetNames[SheetNames.length - 1]);
+  let fileReleased = addHours(parse(date, "d MMM yyyy", new Date()), 14);
+  let sheet = Sheets?.["Antal per dag region"];
   let fetched = regions(sheet);
   cache.regions = fetched;
+  cache.expires = addHours(fileReleased, 92);
   res.send(fetched);
 };
 
@@ -54,8 +58,8 @@ app.get("/json", (req, res) => {
 });
 
 app.get("/cases", (req, res) => {
-  if (cache.regions) {
-    console.log("regions cached");
+  if (cache.regions && !isPast(cache.expires)) {
+    console.log("regions cached until UTC:", cache.expires);
     res.send(cache.regions);
   } else {
     axios
