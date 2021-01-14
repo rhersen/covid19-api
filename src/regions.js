@@ -1,6 +1,9 @@
 import { format, parse } from "date-fns";
 
-export default (sheet) => {
+export default ({ Sheets }) => {
+  const sheet = Sheets?.["Antal per dag region"];
+  if (!sheet) return {};
+
   let entries = Object.entries(sheet);
 
   let columnKeys = Object.fromEntries(
