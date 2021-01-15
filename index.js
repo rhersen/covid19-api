@@ -1,8 +1,8 @@
 import axios from "axios";
 import express from "express";
 import xlsx from "xlsx";
-import regions from "./src/regions.js";
-import {addHours, isPast, parse} from "date-fns";
+import cases from "./src/cases.js";
+import { addHours, isPast, parse } from "date-fns";
 import deaths from "./src/deaths.js";
 
 const app = express();
@@ -24,49 +24,30 @@ async function getBook() {
   return book;
 }
 
-app.get("/json", async (req, res) => {
-  try {
-    if (cache.book && !isPast(cache.expires)) {
-      console.log("FHM data cached until UTC:", cache.expires);
-      res.send(cache.book);
-    } else {
-      res.send(await getBook());
-    }
-  } catch (error) {
-    console.error(error);
-    res.status(500).send(error.message);
-  }
-});
+app.get(
+  "/json",
+  handle((book) => book)
+);
 
-app.get("/cases", async (req, res) => {
-  try {
-    if (cache.book && !isPast(cache.expires)) {
-      console.log("FHM data cached until UTC:", cache.expires);
-      res.send(regions(cache.book));
-    } else {
-      const book = await getBook();
-      res.send(regions(book));
-    }
-  } catch (error) {
-    console.error(error);
-    res.status(500).send(error.message);
-  }
-});
+app.get("/cases", handle(cases));
+app.get("/deaths", handle(deaths));
 
-app.get("/deaths", async (req, res) => {
-  try {
-    if (cache.book && !isPast(cache.expires)) {
-      console.log("FHM data cached until UTC:", cache.expires);
-      res.send(deaths(cache.book));
-    } else {
-      const book = await getBook();
-      res.send(deaths(book));
+function handle(f) {
+  return async (req, res) => {
+    try {
+      if (cache.book && !isPast(cache.expires)) {
+        console.log("FHM data cached until UTC:", cache.expires);
+        res.send(f(cache.book));
+      } else {
+        const book = await getBook();
+        res.send(f(book));
+      }
+    } catch (error) {
+      console.error(error);
+      res.status(500).send(error.message);
     }
-  } catch (error) {
-    console.error(error);
-    res.status(500).send(error.message);
-  }
-});
+  };
+}
 
 app.listen(port, () => {
   console.log(`covid19-api app listening at http://localhost:${port}`);

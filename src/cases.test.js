@@ -1,13 +1,13 @@
-import regions from "./regions.js";
+import cases from "./cases.js";
 
-describe("regions", function () {
+describe("cases", function () {
   it("handles empty input", function () {
-    expect(regions({})).toEqual({});
+    expect(cases({})).toEqual({});
   });
 
   it("handles 2 by 2", function () {
     expect(
-      regions({
+      cases({
         Sheets: {
           "Antal per dag region": {
             A1: {
@@ -42,7 +42,7 @@ describe("regions", function () {
 
   it("handles 3 by 3", function () {
     expect(
-      regions({
+      cases({
         Sheets: {
           "Antal per dag region": {
             "!ref": "A1:W339",
