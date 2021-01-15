@@ -1,4 +1,4 @@
-import { format, parse } from "date-fns";
+import * as date from "./date.js";
 
 export default ({ Sheets }) => {
   const sheet = Sheets?.["Antal per dag region"];
@@ -29,11 +29,8 @@ export default ({ Sheets }) => {
     .forEach(([cell, value]) => {
       let match = /^(\D+)(\d+)$/.exec(cell);
       if (match)
-        columns[columnKeys[match[1]]][iso(rowKeys[match[2]])] = value.v;
+        columns[columnKeys[match[1]]][date.iso(rowKeys[match[2]])] = value.v;
     });
   return columns;
 };
 
-function iso(date) {
-  return format(parse(date, "M/d/yy", new Date()), "yyyy-MM-dd");
-}

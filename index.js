@@ -3,6 +3,7 @@ import express from "express";
 import xlsx from "xlsx";
 import regions from "./src/regions.js";
 import {addHours, isPast, parse} from "date-fns";
+import deaths from "./src/deaths.js";
 
 const app = express();
 const port = 3000;
@@ -45,6 +46,21 @@ app.get("/cases", async (req, res) => {
     } else {
       const book = await getBook();
       res.send(regions(book));
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send(error.message);
+  }
+});
+
+app.get("/deaths", async (req, res) => {
+  try {
+    if (cache.book && !isPast(cache.expires)) {
+      console.log("FHM data cached until UTC:", cache.expires);
+      res.send(deaths(cache.book));
+    } else {
+      const book = await getBook();
+      res.send(deaths(book));
     }
   } catch (error) {
     console.error(error);
