@@ -1,5 +1,6 @@
 import axios from "axios";
 import express from "express";
+import cors from "cors";
 import xlsx from "xlsx";
 import cases from "./src/cases.js";
 import { addHours, isPast, parse } from "date-fns";
@@ -23,6 +24,8 @@ async function getBook() {
   cache.expires = addHours(fileReleased, 23);
   return book;
 }
+
+app.use(cors())
 
 app.get(
   "/json",
