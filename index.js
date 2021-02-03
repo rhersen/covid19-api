@@ -7,7 +7,7 @@ import { addHours, isPast, parse } from "date-fns";
 import deaths from "./src/deaths.js";
 
 const app = express();
-const port = 3000;
+const port = 1339;
 const url =
   "https://www.arcgis.com/sharing/rest/content/items/b5e7488e117749c19881cce45db13f7e/data";
 const cache = {};
