@@ -28,12 +28,12 @@ async function getBook() {
 app.use(cors())
 
 app.get(
-  "/json",
+  /\/json$/,
   handle((book) => book)
 );
 
-app.get("/cases", handle(cases));
-app.get("/deaths", handle(deaths));
+app.get(/\/cases$/, handle(cases));
+app.get(/\/deaths$/, handle(deaths));
 
 function handle(f) {
   return async (req, res) => {
